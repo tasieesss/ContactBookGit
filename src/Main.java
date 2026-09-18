@@ -15,6 +15,9 @@ public class Main {
     public static final String LIST_CONTACTS  = "LC";
     public static final String QUIT           = "Q";
 
+    public static final String GET_NAME_BY_PHONE = "GN";
+    public static final String SAME_PHONES = "EP";
+
     //Constantes que definem as mensagens para o utilizador
     public static final String CONTACT_EXISTS = "contactBook.Contact already exists.";
     public static final String NAME_NOT_EXIST = "contactBook.Contact does not exist.";
@@ -24,6 +27,10 @@ public class Main {
     public static final String BOOK_EMPTY = "contactBook.Contact book empty.";
     public static final String QUIT_MSG = "Goodbye!";
     public static final String COMMAND_ERROR = "Unknown command.";
+
+    public static final String PHONE_NOT_EXIST = "Phone number does not exist.";
+    public static final String SHARED_PHONE_NUMBERS = "There are contacts that share phone numbers.";
+    public static final String DIFFERENT_PHONE_NUMBERS = "All contacts have different phone numbers.";
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
@@ -53,6 +60,13 @@ public class Main {
                 case LIST_CONTACTS:
                     listAllContacts(cBook);
                     break;
+
+                case GET_NAME_BY_PHONE:
+                    getNameByPhone(in, cBook);
+                    break;
+                case SAME_PHONES:
+                    checkEqualPhones(cBook);
+                    break;
                 default:
                     System.out.println(COMMAND_ERROR);
             }
@@ -62,6 +76,24 @@ public class Main {
         System.out.println(QUIT_MSG);
         System.out.println();
         in.close();
+    }
+
+    private static void checkEqualPhones(ContactBook cBook) {
+        if (cBook.hasRepeatedPhones())
+            System.out.println(SHARED_PHONE_NUMBERS);
+        else
+            System.out.println(DIFFERENT_PHONE_NUMBERS);
+    }
+
+    private static void getNameByPhone(Scanner in, ContactBook cBook) {
+        int phone = in.nextInt();
+        in.nextLine();
+        Contact contact = cBook.getContactByPhone(phone);
+
+        if (contact != null)
+            System.out.println(contact.getName());
+        else
+            System.out.println(PHONE_NOT_EXIST);
     }
 
     private static String getCommand(Scanner in) {
